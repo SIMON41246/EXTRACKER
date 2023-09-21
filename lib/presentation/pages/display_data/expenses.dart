@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:expenses/app/ads/unity_ads.dart';
 import 'package:expenses/app/realm.dart';
 import 'package:expenses/models/expense.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import 'package:lottie/lottie.dart';
 import 'package:realm/realm.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
-import '../../ads/banner_ad.dart';
 
 class Expenses extends StatefulWidget {
   const Expenses({Key? key}) : super(key: key);
@@ -33,7 +31,6 @@ class _ExpensesState extends State<Expenses> {
   void initState() {
     data = expenses.toList();
     super.initState();
-    UnityAds.init(gameId: "5416569",testMode: true);
   }
 
   @override
@@ -114,12 +111,7 @@ class _ExpensesState extends State<Expenses> {
                               );
                             }),
                       ),
-                       UnityBannerAd(
-                         placementId: 'Banner_Android',
-                         onLoad: (placementId) => print('Banner loaded: $placementId'),
-                         onClick: (placementId) => print('Banner clicked: $placementId'),
-                         onFailed: (placementId, error, message) => print('Banner Ad $placementId failed: $error $message'),
-                       )
+
                     ],
                   )
                       :  Column(

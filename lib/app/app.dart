@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:expenses/app/routes.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
@@ -16,14 +19,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    UnityAds.init(gameId: "5416569");
   }
 
   @override
@@ -35,8 +36,9 @@ class _MyAppState extends State<MyApp> {
       getPages: Routes.pages,
     );
   }
-}
 
+
+}
 
 //Show banner Ad
 

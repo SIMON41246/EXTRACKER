@@ -8,7 +8,7 @@
         android:value="109153287" />
 
     <application
-        android:label="expenses"
+        android:label="ExTracker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
