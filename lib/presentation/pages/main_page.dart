@@ -6,7 +6,10 @@ import 'package:expenses/presentation/pages/settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:expenses/presentation/pages/display_data/home.dart';
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
+
+import 'categories.dart';
+import 'display_data/expenses.dart';
+import 'home/home_screen.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -16,17 +19,21 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int index = 0;
-  bool _showBanner = false;
-  Map<String, bool> placements = {
-    AdManager.interstitialVideoAdPlacementId: false,
-    AdManager.rewardedVideoAdPlacementId: false,
-  };
+  int currenttab = 0;
+  final List<Widget> screens = [
+    HomeScreen(),
+    Categories(),
+    Reports(),
+    Settings()
+  ];
+  Widget currentScreen = HomeScreen();
+  final PageStorageBucket bucket = PageStorageBucket();
+
   late Timer _timer;
 
   List<Widget> pages = [
-    const HomeView(),
-    const Add(),
+    const HomeScreen(),
+    const Expenses(),
     const Reports(),
     const Settings()
   ];
@@ -34,7 +41,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    UnityAds.init(
+    /*UnityAds.init(
       gameId: AdManager.gameId,
       testMode: true,
       onComplete: () {
@@ -48,7 +55,7 @@ class _MainPageState extends State<MainPage> {
       },
       onFailed: (error, message) =>
           print('Initialization Failed: $error $message'),
-    );
+    );*/
 
   }
   @override
@@ -61,30 +68,144 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages.elementAt(index),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,
-        unselectedItemColor: Colors.black,
-        selectedItemColor: const Color.fromRGBO(113, 131, 85,100),
-        backgroundColor: Colors.black,
-        onTap: (currentIndex) {
-          setState(() {
-            index = currentIndex;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Expenses"),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Add"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart), label: "Reports"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: "settings"),
-        ],
+      body: PageStorage(
+        child: currentScreen,
+        bucket: bucket,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentScreen = HomeScreen();
+                        currenttab = 0;
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.home,
+                          color: currenttab == 0
+                              ? Colors.green
+                              : Colors.green.shade50,
+                        ),
+                        Text(
+                          "Home",
+                          style: TextStyle(
+                              color: currenttab == 0
+                                  ? Colors.green
+                                  : Colors.green.shade50),
+                        )
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentScreen = Expenses();
+                        currenttab = 0;
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.network_cell_outlined,
+                          color: currenttab == 0
+                              ? Colors.green
+                              : Colors.green.shade50,
+                        ),
+                        Text(
+                          "Expenses",
+                          style: TextStyle(
+                              color: currenttab == 0
+                                  ? Colors.green
+                                  : Colors.green.shade50),
+                        )
+                      ],
+                    ),
+                  )
+
+                ],
+              ),
+              Row(
+                children: [
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentScreen = Reports();
+                        currenttab = 0;
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.analytics_outlined,
+                          color: currenttab == 0
+                              ? Colors.green
+                              : Colors.green.shade50,
+                        ),
+                        Text(
+                          "Reports",
+                          style: TextStyle(
+                              color: currenttab == 0
+                                  ? Colors.green
+                                  : Colors.green.shade50),
+                        )
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        currentScreen = Settings();
+                        currenttab = 0;
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.settings,
+                          color: currenttab == 0
+                              ? Colors.green
+                              : Colors.green.shade50,
+                        ),
+                        Text(
+                          "Settings",
+                          style: TextStyle(
+                              color: currenttab == 0
+                                  ? Colors.green
+                                  : Colors.green.shade50),
+                        )
+                      ],
+                    ),
+                  )
+
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
   void _loadAd(String placementId) {
-    UnityAds.load(
+    /*UnityAds.load(
       placementId: placementId,
       onComplete: (placementId) {
         print('Load Complete $placementId');
@@ -94,14 +215,16 @@ class _MainPageState extends State<MainPage> {
       },
       onFailed: (placementId, error, message) =>
           print('Load Failed $placementId: $error $message'),
-    );
+    );*/
   }
 
+/*
   void _showAd(String placementId) {
     setState(() {
       placements[placementId] = false;
     });
-    UnityAds.showVideoAd(
+    */
+/*UnityAds.showVideoAd(
       placementId: placementId,
       onComplete: (placementId) {
         print('Video Ad $placementId completed');
@@ -117,8 +240,10 @@ class _MainPageState extends State<MainPage> {
         print('Video Ad $placementId skipped');
         _loadAd(placementId);
       },
-    );
+    );*//*
+
   }
+*/
 }
 class AdManager {
   static String get gameId {
