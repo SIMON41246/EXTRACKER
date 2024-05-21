@@ -5,7 +5,6 @@ import 'package:expenses/presentation/pages/categories.dart';
 
 import '../reports.dart';
 import '../settings.dart';
-import 'balances.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);

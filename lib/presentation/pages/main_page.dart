@@ -1,12 +1,15 @@
 import 'dart:async';
 
-import 'package:expenses/presentation/pages/add/main_add.dart';
 import 'package:expenses/presentation/pages/reports.dart';
 import 'package:expenses/presentation/pages/settings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:expenses/presentation/pages/display_data/home.dart';
-
+import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'add/add_group_expense.dart';
 import 'categories.dart';
 import 'display_data/expenses.dart';
 import 'home/home_screen.dart';
@@ -30,6 +33,7 @@ class _MainPageState extends State<MainPage> {
   final PageStorageBucket bucket = PageStorageBucket();
 
   late Timer _timer;
+  bool _isExpanded = false;
 
   List<Widget> pages = [
     const HomeScreen(),
@@ -37,6 +41,7 @@ class _MainPageState extends State<MainPage> {
     const Reports(),
     const Settings()
   ];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -56,13 +61,13 @@ class _MainPageState extends State<MainPage> {
       onFailed: (error, message) =>
           print('Initialization Failed: $error $message'),
     );*/
-
   }
+
   @override
   void dispose() {
     super.dispose();
     _timer.cancel();
-
+    _isExpanded = false;
   }
 
   @override
@@ -73,9 +78,12 @@ class _MainPageState extends State<MainPage> {
         bucket: bucket,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-        backgroundColor: Colors.green,
+        onPressed: () {
+          setState(() {
+            _isExpanded = !_isExpanded;
+          });
+        },
+        child: Icon(_isExpanded ? Icons.close : Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -138,7 +146,6 @@ class _MainPageState extends State<MainPage> {
                       ],
                     ),
                   )
-
                 ],
               ),
               Row(
@@ -195,15 +202,59 @@ class _MainPageState extends State<MainPage> {
                       ],
                     ),
                   )
-
                 ],
               ),
             ],
           ),
         ),
       ),
+      bottomSheet: _isExpanded
+          ? Container(
+              height: 180.h,
+              padding: EdgeInsets.symmetric(vertical: 15.r, horizontal: 15.r),
+              decoration: BoxDecoration(),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50.h,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(AddGroupExpense());
+                    },
+                    child: Container(
+                      height: 40.h,
+                      child: Center(child: Text("Add Group Expense")),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Colors.grey.shade300),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(AddGroupExpense());
+                    },
+                    child: Container(
+                      height: 40.h,
+                      child: Center(child: Text("Add Personal Expense")),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Colors.grey.shade300),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                ],
+              ),
+            )
+          : null, // If not expanded, bottom navigation bar is null
     );
   }
+
   void _loadAd(String placementId) {
     /*UnityAds.load(
       placementId: placementId,
@@ -240,11 +291,12 @@ class _MainPageState extends State<MainPage> {
         print('Video Ad $placementId skipped');
         _loadAd(placementId);
       },
-    );*//*
+    );*/ /*
 
   }
 */
 }
+
 class AdManager {
   static String get gameId {
     if (defaultTargetPlatform == TargetPlatform.android) {

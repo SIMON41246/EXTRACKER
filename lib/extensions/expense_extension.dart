@@ -59,7 +59,7 @@ extension ExpensesExtension on List<Expense> {
         final categoryName = category.name;
         if (categoryAmountMap.containsKey(categoryName)) {
           categoryAmountMap[categoryName] =
-              (categoryAmountMap[categoryName]! + amount)!;
+              (categoryAmountMap[categoryName]! + amount);
         } else {
           categoryAmountMap[categoryName] = amount;
         }
