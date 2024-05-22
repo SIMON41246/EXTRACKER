@@ -55,6 +55,10 @@ dependencies:
   flutter_expandable_fab: ^2.0.0
   dropdown_textfield: ^1.0.8
   chips_choice: ^3.0.1
+  iconsax: ^0.0.8
+  image_picker: ^1.0.0
+
+
 
 
 dev_dependencies:

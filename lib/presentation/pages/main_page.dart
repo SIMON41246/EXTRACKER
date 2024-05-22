@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'add/add_group_expense.dart';
+import 'group_expense/group_expense_add_screen.dart';
 import 'categories.dart';
 import 'display_data/expenses.dart';
 import 'home/home_screen.dart';
@@ -220,7 +220,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(AddGroupExpense());
+                      Get.to(GroupExpenseAddScreen());
                     },
                     child: Container(
                       height: 40.h,
@@ -235,7 +235,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(AddGroupExpense());
+                      Get.to(GroupExpenseAddScreen());
                     },
                     child: Container(
                       height: 40.h,
