@@ -57,6 +57,7 @@ dependencies:
   chips_choice: ^3.0.1
   iconsax: ^0.0.8
   image_picker: ^1.0.0
+  pie_chart: ^5.4.0
 
 
 

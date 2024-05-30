@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chips_choice/chips_choice.dart';
+import 'package:expenses/presentation/common/app_strings.dart';
 import 'package:expenses/presentation/pages/group_expense/group_expense_add_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+
+import '../../../utils/custom_snackbars.dart';
 
 class GroupExpenseAddScreen extends StatefulWidget {
   const GroupExpenseAddScreen({super.key});
@@ -30,20 +33,6 @@ class _GroupExpenseAddScreenState extends State<GroupExpenseAddScreen> {
   ]; // Option 2
   late String _selectedLocation;
   GroupExpenseAddController controller = Get.put(GroupExpenseAddController());
-  int tag = 1;
-  List<String> options = [
-    'News',
-    'Entertainment',
-    'Politics',
-    'Automotive',
-    'Sports',
-    'Education',
-    'Fashion',
-    'Travel',
-    'Food',
-    'Tech',
-    'Science',
-  ];
 
   @override
   void initState() {
@@ -55,49 +44,42 @@ class _GroupExpenseAddScreenState extends State<GroupExpenseAddScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.grey.shade300,
       body: Padding(
         padding: EdgeInsets.only(left: 14.0.r, right: 14.r, top: 15.r),
         child: SingleChildScrollView(
           child: Stack(
-            children:[
+            children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Add Personal Expense",
+                    "Add Group Expense",
                     style: GoogleFonts.roboto(fontSize: 15.sp),
                   ),
                   SizedBox(
                     height: 10.h,
                   ),
-                  DropdownButton(
-                    hint: _selectedLocation == null
-                        ? Text('Dropdown')
-                        : Text(
-                      _selectedLocation,
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                    isExpanded: true,
-                    iconSize: 30.0,
-                    style: TextStyle(color: Colors.black, fontSize: 15.sp),
-                    items: ['One', 'Two', 'Three'].map(
-                          (val) {
-                        return DropdownMenuItem<String>(
-                          value: val,
-                          enabled: true,
-                          child: Text(val),
-                        );
-                      },
-                    ).toList(),
-                    onChanged: (val) {
-                      setState(
-                            () {
-                          _selectedLocation = val!;
-                        },
-                      );
-                    },
-                  ),
+                  Container(
+                      width: double.infinity,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: TextField(
+                        controller: controller.categoryController,
+                        decoration: InputDecoration(
+                          hintText: "Enter Group Expense",
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                        ),
+                      )),
                   SizedBox(
                     height: 10.h,
                   ),
@@ -106,10 +88,13 @@ class _GroupExpenseAddScreenState extends State<GroupExpenseAddScreen> {
                     style: GoogleFonts.roboto(fontSize: 15.sp),
                   ),
                   ChipsChoice<int>.single(
-                    value: tag,
-                    onChanged: (val) => setState(() => tag = val),
+                    choiceStyle: C2ChipStyle(
+                        backgroundColor: Colors.green.shade800,
+                        checkmarkColor: Colors.green.shade800),
+                    value: controller.tag,
+                    onChanged: (val) => setState(() => controller.tag = val),
                     choiceItems: C2Choice.listFrom<int, String>(
-                      source: options,
+                      source: AppStrings.options,
                       value: (i, v) => i,
                       label: (i, v) => v,
                     ),
@@ -125,14 +110,18 @@ class _GroupExpenseAddScreenState extends State<GroupExpenseAddScreen> {
                     height: 5.h,
                   ),
                   TextFormField(
+                    controller: controller.descriptionController,
                     maxLines: 3,
                     decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(8.r)),
                       disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0.r),
-                          borderSide: BorderSide(color: Colors.black)),
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(8.r)),
                       enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0.r),
-                          borderSide: BorderSide(color: Colors.black)),
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(8.r)),
                       fillColor: Colors.white,
                       focusColor: Colors.green,
                       helperText: "Write a description for the expense",
@@ -143,12 +132,16 @@ class _GroupExpenseAddScreenState extends State<GroupExpenseAddScreen> {
                     height: 10.h,
                   ),
                   // - - - - - - - - - - - - - - - - - - MAIN IMAGE Delivery Man - - - - - - - - - - - - - - - - - -  //
+                  Text(
+                    "Add Photo",
+                    style: GoogleFonts.roboto(fontSize: 15.sp),
+                  ),
                   GestureDetector(
                     onTap: controller.selectDelivreyImage,
                     child: Obx(
-                          () => Container(
+                      () => Container(
                         width: double.infinity,
-                        height: 250.0.h,
+                        height: 220.0.h,
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           border: Border.all(
@@ -159,36 +152,60 @@ class _GroupExpenseAddScreenState extends State<GroupExpenseAddScreen> {
                         ),
                         child: controller.image.value != ""
                             ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12.r),
-                            child: Image.file(File(controller.image.value),
-                                fit: BoxFit.cover))
+                                borderRadius: BorderRadius.circular(12.r),
+                                child: Image.file(File(controller.image.value),
+                                    fit: BoxFit.cover))
                             : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Iconsax.image,
-                                size: 40,
-                                color: Colors.white.withOpacity(0.4)),
-                            SizedBox(height: 12.h),
-                            Text("Select Image (Main)",
-                                style: Theme.of(context).textTheme.bodySmall)
-                          ],
-                        ),
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Iconsax.image,
+                                      size: 40.w,
+                                      color: Colors.black.withOpacity(0.4)),
+                                  SizedBox(height: 12.h),
+                                  Text("Select Image",
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall)
+                                ],
+                              ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.h,),
-                  Align(alignment: Alignment.bottomCenter,child: ElevatedButton(onPressed: (){}, child: Container(
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Text("Add Group Expense",style: GoogleFonts.roboto(color:Colors.white),),
-                  )),)
-
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.green.shade800),
+                            shape:
+                                MaterialStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                            ))),
+                        onPressed: () {
+                          controller.addGroupExpense().then((value) => {
+                                CustomSnackBars.success(
+                                    title: "Success",
+                                    message: "Expense Added SucessFully"),
+                                setState(() {
+                                  AppStrings.options.add(value);
+                                })
+                              });
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                          ),
+                          child: Text(
+                            "Add Group Expense",
+                            style: GoogleFonts.roboto(color: Colors.white),
+                          ),
+                        )),
+                  )
                 ],
               ),
             ],

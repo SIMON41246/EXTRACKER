@@ -1,10 +1,18 @@
-import 'package:expenses/models/category.dart';
-import 'package:expenses/models/expense.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:collection/collection.dart';
+import 'package:expenses/models/group_expense.dart';
+import 'package:expenses/models/personal_expense.dart';
+import 'package:expenses/presentation/pages/display_data/expenses.dart';
+import 'package:expenses/presentation/pages/personal_expense/personal_expense_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:realm/realm.dart';
 
+import '../../../app/realm.dart';
 import '../../common/widgets/custom_expense_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,11 +23,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final expense = Expense(ObjectId(), 15.02, DateTime.now(),
-      note: "Good", category: Category("FlatMates", 1233456));
+  /*final expense = Expense(ObjectId(), 15.02, DateTime.now(),
+      note: "Good", category: Category("FlatMates", 1233456));*/
+
+  var expenses = realm.all<PersonalExpense>();
+  List<PersonalExpense> data = [];
+  StreamSubscription<RealmResultsChanges<PersonalExpense>>? _expensesSub;
+  double convertedAmount = 0.0;
+
+  double get _total => data.map((expense) => expense.amount).sum;
+
+  @override
+  void initState() {
+    data = expenses.toList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _expensesSub ??= expenses.changes.listen((changes) {
+      setState(() {
+        data = changes.results.toList();
+      });
+    });
     return SafeArea(
         bottom: true,
         top: true,
@@ -61,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               Text(
-                                "£308",
+                                "${_total}",
                                 style: GoogleFonts.roboto(
                                     fontSize: 20.sp,
                                     color: Colors.green.shade800),
@@ -115,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 5.h,
                             ),
-                            Text("£32.25",
+                            Text("${_total}",
                                 style: GoogleFonts.roboto(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.normal))
@@ -164,7 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 20.sp, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(Expenses());
+                          },
                           child: Text(
                             "See All",
                             style: GoogleFonts.roboto(fontSize: 10.sp),
@@ -174,20 +202,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10.h,
                   ),
-                  Container(
-                    height: 250.h,
-                    child: ListView.separated(
-                      itemCount: 2,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return CustomExpenseCard();
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(height: 8.0.h);
-                      },
-                    ),
-                  ),
+                  expenses.length != 0
+                      ? Container(
+                          height: 250.h,
+                          child: ListView.separated(
+                            itemCount: 2,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return CustomExpenseCard(expenses[index]);
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return SizedBox(height: 8.0.h);
+                            },
+                          ),
+                        )
+                      : SizedBox(
+                          height: 250.h,
+                        ),
                   SizedBox(
                     height: 5.h,
                   ),
@@ -216,10 +249,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 8.0,
+                        
                       ),
-                      itemCount: 4, // Total number of items
+                      itemCount: expenses.length, // Total number of items
                       itemBuilder: (BuildContext context, int index) {
                         // Your item widgets here
                         return Container(
@@ -232,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             children: [
                               Text(
-                                "Flatmates",
+                                "${expenses[index].groupExpense}",
                                 style: GoogleFonts.roboto(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.bold,
@@ -242,12 +274,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 5.h,
                               ),
                               Container(
-                                width: 70.w,
-                                height: 70.h,
+                                width: 100.w,
+                                height: 80.h,
                                 decoration:
                                     BoxDecoration(shape: BoxShape.circle),
-                                child:
-                                    Image.asset("assets/images/statistics.png"),
+                                child: Image.file(File(expenses[index].image)),
                               ),
                               SizedBox(
                                 height: 5.h,
@@ -259,9 +290,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 3.h,
                               ),
-                              Text("+£9.60",
+                              Text("+${expenses[index].amount}",
                                   style: GoogleFonts.roboto(
                                       fontSize: 12.sp,
+                                      color: Colors.green.shade800,
                                       fontWeight: FontWeight.bold)),
                             ],
                           ),

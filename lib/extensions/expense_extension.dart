@@ -1,7 +1,8 @@
 import 'package:expenses/extensions/date_extension.dart';
-import 'package:expenses/models/expense.dart';
+import 'package:expenses/models/personal_expense.dart';
 import 'package:expenses/type/period.dart';
 
+/*
 extension ExpensesExtension on List<Expense> {
   List filterByPeriod(Period period, int periodIndex) {
     List<Expense> expanses = [];
@@ -56,7 +57,7 @@ extension ExpensesExtension on List<Expense> {
       final amount = element.amount;
 
       if (category != null) {
-        final categoryName = category.name;
+        final categoryName = category.category;
         if (categoryAmountMap.containsKey(categoryName)) {
           categoryAmountMap[categoryName] =
               (categoryAmountMap[categoryName]! + amount);
@@ -110,3 +111,4 @@ extension ExpensesExtension on List<Expense> {
     return grouped;
   }
 }
+*/

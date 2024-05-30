@@ -1,23 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget CustomExpenseCard(){
+import '../../../models/personal_expense.dart';
+
+Widget CustomExpenseCard(PersonalExpense? expense) {
   return ListTile(
     tileColor: Colors.white,
     onTap: () {},
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r)),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
     title: Text(
-      "Expense1",
+      "${expense!.description}",
       style: GoogleFonts.roboto(
         fontSize: 15.sp,
         fontWeight: FontWeight.bold,
       ),
     ),
     leading: CircleAvatar(
-      child: Image.asset("assets/images/statistics.png"),
+      child: Image.file(File(expense.image),fit: BoxFit.cover,),
       backgroundColor: Colors.transparent,
     ),
     subtitle: Column(
@@ -32,10 +35,9 @@ Widget CustomExpenseCard(){
               width: 4.w,
             ),
             Text(
-              "25£",
+              "${expense.amount}",
               style: GoogleFonts.roboto(
-                  fontSize: 12.sp,
-                  color: Colors.red.shade800),
+                  fontSize: 12.sp, color: Colors.red.shade800),
             )
           ],
         ),
@@ -54,12 +56,12 @@ Widget CustomExpenseCard(){
             Container(
               child: Center(
                   child: Text(
-                    "market",
-                    style: GoogleFonts.roboto(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green.shade800),
-                  )),
+                "${expense.groupExpense}",
+                style: GoogleFonts.roboto(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green.shade800),
+              )),
               decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(12.r),
@@ -69,7 +71,7 @@ Widget CustomExpenseCard(){
                     style: BorderStyle.solid),
               ),
               padding: EdgeInsets.all(4.r),
-              width: 50.w,
+              width: 80.w,
             )
           ],
         ),
@@ -88,7 +90,7 @@ Widget CustomExpenseCard(){
         SizedBox(
           height: 4.h,
         ),
-        Text("+£9.60",
+        Text("+£${expense.amount}",
             style: GoogleFonts.roboto(
                 fontSize: 10.sp,
                 fontWeight: FontWeight.bold,

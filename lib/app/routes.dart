@@ -1,7 +1,6 @@
 import 'package:expenses/presentation/onBoarding/view/onBoarding_view.dart';
-import 'package:expenses/presentation/pages/add/main_add.dart';
-import 'package:expenses/presentation/pages/categories.dart';
-import 'package:expenses/presentation/pages/display_data/home.dart';
+
+import 'package:expenses/presentation/pages/home/home_screen.dart';
 import 'package:expenses/presentation/pages/main_page.dart';
 import 'package:expenses/presentation/pages/reports.dart';
 import 'package:expenses/presentation/pages/settings.dart';
@@ -20,9 +19,7 @@ class Routes {
 
 
   static List<GetPage> pages = [
-    GetPage(name: Routes.add, page: () => const Add()),
-    GetPage(name: Routes.categeries, page: () => const Categories()),
-    GetPage(name: Routes.expenses, page: () => const HomeView()),
+    GetPage(name: Routes.expenses, page: () => const HomeScreen()),
     GetPage(name: Routes.reports, page: () => const Reports()),
     GetPage(name: Routes.settings, page: () => const Settings()),
     GetPage(name: Routes.home, page: () => const MainPage()),

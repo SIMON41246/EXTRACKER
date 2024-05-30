@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:expenses/presentation/pages/personal_expense/personal_expense_screen.dart';
 import 'package:expenses/presentation/pages/reports.dart';
 import 'package:expenses/presentation/pages/settings.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'group_expense/group_expense_add_screen.dart';
-import 'categories.dart';
 import 'display_data/expenses.dart';
 import 'home/home_screen.dart';
 
@@ -23,12 +23,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currenttab = 0;
-  final List<Widget> screens = [
-    HomeScreen(),
-    Categories(),
-    Reports(),
-    Settings()
-  ];
+
   Widget currentScreen = HomeScreen();
   final PageStorageBucket bucket = PageStorageBucket();
 
@@ -235,7 +230,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(GroupExpenseAddScreen());
+                      Get.to(PersonalExpenseScreen());
                     },
                     child: Container(
                       height: 40.h,

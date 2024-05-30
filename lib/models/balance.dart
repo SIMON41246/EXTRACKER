@@ -1,5 +1,4 @@
 import 'package:realm/realm.dart';
-
 part 'balance.g.dart';
 
 @RealmModel()

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:expenses/app/realm.dart';
-import 'package:expenses/models/expense.dart';
+import 'package:expenses/models/personal_expense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,16 +18,16 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
-  var expenses = realm.all<Expense>();
-  List<Expense> data = [];
-  StreamSubscription<RealmResultsChanges<Expense>>? _expensesSub;
+  var expenses = realm.all<PersonalExpense>();
+  List<PersonalExpense> data = [];
+  StreamSubscription<RealmResultsChanges<PersonalExpense>>? _expensesSub;
   double convertedAmount = 0.0;
 
   double get _total => data.map((expense) => expense.amount).sum;
 
   @override
   void initState() {
-    data = expenses.toList();
+     data = expenses.toList();
     super.initState();
   }
 
@@ -57,8 +57,8 @@ class _ExpensesState extends State<Expenses> {
               ListView.separated(
                 padding: EdgeInsets.symmetric(vertical: 50.r),
                 itemBuilder: (context, index) {
-                  return CustomExpenseCard();
-                },itemCount: 9, separatorBuilder: (BuildContext context, int index) {
+                  return CustomExpenseCard(expenses[index]);
+                },itemCount: expenses.length, separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(height: 8.0.h);
               },
               )

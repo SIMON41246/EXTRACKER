@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:expenses/app/pdf/mobile.dart';
 import 'package:expenses/app/realm.dart';
 import 'package:expenses/models/balance.dart';
-import 'package:expenses/models/category.dart';
-import 'package:expenses/models/expense.dart';
+import 'package:expenses/models/group_expense.dart';
+import 'package:expenses/models/personal_expense.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -22,18 +22,18 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  var categeries = realm.all<Category>().toList();
+  // var categeries = realm.all<Category>().toList();
   var balances = realm.all<Balance>();
-  var expenses = realm.all<Expense>();
-  List<Expense> dataExpenses = [];
+  /*var expenses = realm.all<Expense>();
+  List<Expense> dataExpenses = [];*/
   List<Balance> dataBalance = [];
 
-  double get _total => dataExpenses.map((expense) => expense.amount).sum;
+  // double get _total => dataExpenses.map((expense) => expense.amount).sum;
 
   @override
   void initState() {
     dataBalance = balances.toList();
-    dataExpenses = expenses.toList();
+    // dataExpenses = expenses.toList();
     super.initState();
   }
 
@@ -77,7 +77,7 @@ class _SettingsState extends State<Settings> {
                               "Are You Sure You Want To Erase All Data?"),
                           title: const Text("Delete All Categories"),
                           actions: [
-                            TextButton(
+                           /* TextButton(
                                 onPressed: () {
                                   realm.write(() {
                                     realm.deleteAll<Category>();
@@ -85,7 +85,7 @@ class _SettingsState extends State<Settings> {
                                   });
                                   Get.back();
                                 },
-                                child: const Text("Yes"))
+                                child: const Text("Yes"))*/
                           ],
                         );
                       });
@@ -152,13 +152,13 @@ class _SettingsState extends State<Settings> {
     header.cells[1].value = "Price";
     header.cells[2].value = "Date";
 
-    for (var expense in dataExpenses) {
+    /*for (var expense in dataExpenses) {
       PdfGridRow row = table.rows.add();
       row.cells[0].value = expense.category?.name;
       row.cells[1].value = expense.amount.toStringAsFixed(2);
       row.cells[2].value =
           "${expense.date.day.toString()}/${expense.date.month.toString()}/${expense.date.year.toString()}  ";
-    }
+    }*/
     final string = page.graphics.drawString(
         "ExTracker  ${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day} ${DateTime.now().hour}:${DateTime.now().minute}",
         PdfStandardFont(PdfFontFamily.helvetica, 30));
