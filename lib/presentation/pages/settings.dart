@@ -1,9 +1,11 @@
+import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:collection/collection.dart';
 import 'package:expenses/app/pdf/mobile.dart';
 import 'package:expenses/app/realm.dart';
 import 'package:expenses/models/balance.dart';
 import 'package:expenses/models/group_expense.dart';
 import 'package:expenses/models/personal_expense.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -41,95 +43,89 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(181, 201, 154, 100),
-      body: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          height: 500,
-          alignment: Alignment.bottomCenter,
-          decoration: const BoxDecoration(
-              color: Color.fromRGBO(151, 169, 124, 100),
-              borderRadius: BorderRadius.all(Radius.circular(30))),
-          child: ListView(
-            children: [
-              Center(
-                  child: Text(
-                ("Managing Categories"),
-                style: GoogleFonts.roboto(fontSize: 19, color: Colors.black),
-              )),
-              ListTile(
-                title: Text(
-                  "Categories",
-                  style: GoogleFonts.roboto(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ListView(
+          children: [
+            // User card
+            BigUserCard(
+              backgroundColor: Colors.red,
+              userName: "Babacar Ndong",
+              userProfilePic: AssetImage("assets/logo.png"),
+              cardActionWidget: SettingsItem(
+                icons: Icons.edit,
+                iconStyle: IconStyle(
+                  withBackground: true,
+                  borderRadius: 50,
+                  backgroundColor: Colors.yellow[600],
                 ),
-                trailing: Icon(Icons.arrow_forward, color: Colors.black),
+                title: "Modify",
+                subtitle: "Tap to change your data",
                 onTap: () {
-                  Get.toNamed(Routes.categeries);
+                  print("OK");
                 },
               ),
-              ListTile(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: const Text(
-                              "Are You Sure You Want To Erase All Data?"),
-                          title: const Text("Delete All Categories"),
-                          actions: [
-                           /* TextButton(
-                                onPressed: () {
-                                  realm.write(() {
-                                    realm.deleteAll<Category>();
-                                    realm.deleteAll<Expense>();
-                                  });
-                                  Get.back();
-                                },
-                                child: const Text("Yes"))*/
-                          ],
-                        );
-                      });
-                },
-                trailing: const Icon(Icons.arrow_forward, color: Colors.red),
-                title: Text(
-                  "Erase Date",
-                  style: GoogleFonts.roboto(
-                      color: Colors.red, fontWeight: FontWeight.bold),
+            ),
+            SettingsGroup(
+              items: [
+                SettingsItem(
+                  onTap: () {},
+                  icons: CupertinoIcons.pencil_outline,
+                  iconStyle: IconStyle(),
+                  title: 'Appearance',
+                  subtitle: "Make Ziar'App yours",
                 ),
-              ),
-              ListTile(
-                trailing: const Icon(Icons.arrow_forward, color: Colors.black),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("You Want To Export Data?"),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  _createPdf();
-                                  Get.back();
-                                },
-                                child: Text(
-                                  "Yes",
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 19,
-                                    color: Colors.black,
-                                  ),
-                                ))
-                          ],
-                        );
-                      });
-                },
-                title: Text(
-                  "Export Data",
-                  style: GoogleFonts.roboto(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                SettingsItem(
+                  onTap: () {},
+                  icons: Icons.dark_mode_rounded,
+                  iconStyle: IconStyle(
+                    iconsColor: Colors.white,
+                    withBackground: true,
+                    backgroundColor: Colors.red,
+                  ),
+                  title: 'Dark mode',
+                  subtitle: "Automatic",
+                  trailing: Switch.adaptive(
+                    value: false,
+                    onChanged: (value) {},
+                  ),
                 ),
-              )
-            ],
-          ),
+              ],
+            ),
+            SettingsGroup(
+              items: [
+                SettingsItem(
+                  onTap: () {},
+                  icons: Icons.info_rounded,
+                  iconStyle: IconStyle(
+                    backgroundColor: Colors.purple,
+                  ),
+                  title: 'About',
+                  subtitle: "Learn more about Ziar'App",
+                ),
+              ],
+            ),
+            // You can add a settings title
+            SettingsGroup(
+              settingsGroupTitle: "Account",
+              items: [
+                SettingsItem(
+                  onTap: () {},
+                  icons: Icons.exit_to_app_rounded,
+                  title: "Sign Out",
+                ),
+                SettingsItem(
+                  onTap: () {},
+                  icons: CupertinoIcons.delete_solid,
+                  title: "Delete account",
+                  titleStyle: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
